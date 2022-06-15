@@ -28,4 +28,4 @@ ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 RUN pip install dbt-core==1.0.4 dbt-bigquery==1.0.0
 
 COPY --chown=dbtuser:dbtuser ./dbt/profiles.yml ${DBT_HOME}/.dbt
-COPY --chown=dbtuser:dbtuser ./dbt/dbt_k8_demo ${DBT_HOME}/dbt_k8_demo
+COPY --chown=dbtuser:dbtuser ./dbt/PoC BigQuery2Hana ${DBT_HOME}/dbt_k8_demo
