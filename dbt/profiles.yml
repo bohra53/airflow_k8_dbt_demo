@@ -4,10 +4,10 @@ dbt_k8_demo:
       type: bigquery
       dataset: dbt_k8_demo
       fixed_retries: 1
-      location: europe-west2
+      location: europe-west1
       method: oauth
       priority: interactive
       project: rocketech-de-pgcp-sandbox
       threads: 5
       timeout_seconds: 300
-      impersonate_service_account: dbt-user@rocketech-de-pgcp-sandbox.iam.gserviceaccount.com
+      impersonate_service_account: poc-bq2hana@appspot.gserviceaccount.com
