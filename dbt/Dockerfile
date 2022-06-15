@@ -1,6 +1,6 @@
 FROM python:3.8.13
 
-ARG DBT_HOME=/home/dbtuser
+ARG DBT_HOME=/home/khadija_bohra/dbt
 
 # Update and install system packages
 RUN apt-get update -y && \
