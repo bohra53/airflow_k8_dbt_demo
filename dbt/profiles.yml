@@ -7,7 +7,7 @@ dbt_k8_demo:
       location: europe-west1
       method: oauth
       priority: interactive
-      project: rocketech-de-pgcp-sandbox
+      project: poc-bq2hana
       threads: 5
       timeout_seconds: 300
       impersonate_service_account: poc-bq2hana@appspot.gserviceaccount.com
