@@ -1,0 +1,14 @@
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  entrypoint: 'bash'
+  args: ['-c', 'docker build --build-arg "_PROJECT_ID=${_PROJECT_ID}" --build-arg "base_artifact=${_BASE_ARTIFACT}" --build-arg "base_image=${_BASE_IMAGE}" -t ${_REPO_NAME} .']
+  
+
+- name: 'gcr.io/cloud-builders/docker'
+  entrypoint: 'bash'
+  args: ['-c', 'docker tag ${_REPO_NAME} europe-west1-docker.pkg.dev/${_PROJECT_ID}/${_REPO_NAME}/${_IMAGE_NAME}']
+  
+  
+- name: 'gcr.io/cloud-builders/docker'
+  entrypoint: 'bash'
+  args: ['-c', 'docker push europe-west1-docker.pkg.dev/${_PROJECT_ID}/${_REPO_NAME}/${_IMAGE_NAME}']
