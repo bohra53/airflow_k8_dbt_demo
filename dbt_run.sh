@@ -11,7 +11,7 @@ if [ $mode = "run" ]; then
     if [ $full_refresh = "True" ]; then
         echo "Doing a full refresh"
         # dbt run --target="$dbt_target"  --vars="$dbt_vars" --profiles-dir=/app/profiles_dir --full-refresh
-        dbt debug --profiles-dir=/app/profiles_dir --project-dir=/app/dbt/dbt_k8_demo --target=default
+        dbt run --select=models\example\my_first_dbt_model.sql --profiles-dir=/app/profiles_dir --project-dir=/app/dbt/dbt_k8_demo --target=default
     else
         echo "Not doing a full refresh"
         # dbt run --target="$dbt_target" --models="$dbt_models" --vars="$dbt_vars" --profiles-dir=/app/profiles_dir --full-refresh
