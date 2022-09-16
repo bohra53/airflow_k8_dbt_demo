@@ -41,7 +41,7 @@ quay_k8s = KubernetesPodOperator(
     # arguments=["print('This code is running in a Kubernetes Pod')"],
     # labels={},
     # matches sequence of arguments in .sh file (mode,dbt_target,dbt_vars,full_refresh)
-    arguments=['run', 'dev','{from_date: "", to_date: ""}','True'],  
+    arguments=['run', 'default','{from_date: "", to_date: ""}','True'],  
     name="run-dbt-in-pod",
     task_id="run-dbt-in-pod",
     get_logs=True,
