@@ -1,4 +1,5 @@
 dbt_k8_demo:
+  target: default
   outputs:
     default:
       type: bigquery
