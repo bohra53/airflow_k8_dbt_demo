@@ -1,38 +1,51 @@
-from datetime import datetime, timedelta
-
 from airflow import DAG
-from airflow.providers.cncf.kubernetes.operators.kubernetes_pod import KubernetesPodOperator
+from airflow import models
+# Make sure to add below
+from airflow.contrib.operators.kubernetes_pod_operator import KubernetesPodOperator
+from airflow.utils.dates import days_ago
+from airflow.configuration import conf
 
-with DAG(
-        'airflow_k8_dbt_demo',
-        # These args will get passed on to each operator
-        # You can override them on a per-task basis during operator initialization
-        default_args={
-            'depends_on_past': False,
-            'email': ['airflow@example.com'],
-            'email_on_failure': False,
-            'email_on_retry': False,
-            'retries': 1,
-            'retry_delay': timedelta(minutes=5)
-        },
-        description='A simple tutorial DAG',
-        schedule_interval=timedelta(days=1),
-        start_date=datetime(2022, 1, 1),
-        catchup=False,
-        tags=['example']
-) as dag:
-    dbt_run = KubernetesPodOperator(
-        namespace="k8-executor",  # the new namespace you've created in the Workload Identity creation process
-        service_account_name="composer", # the new k8 service account you've created in the Workload Identity creation process
-        image="eu.gcr.io/poc-bq2hana/airflow-k8-dbt-demo:1.0.1",
-        cmds=["bash", "-cx"],
-        arguments=["dbt run --project-dir dbt_k8_demo"],
-        labels={"foo": "bar"},
-        name="dbt-run-k8",
-        task_id="run_dbt_job_on_k8_demo",
-        image_pull_policy="Always",
-        get_logs=True,
-        dag=dag
+
+
+
+args = {
+    'owner': 'dummy',
+    'retries': 0,
+}
+
+docker_dag = DAG(
+    dag_id='dbt_docker_test',
+    default_args=args,
+    schedule_interval=None,
+    start_date=days_ago(1),
+    catchup=False,
+    tags=['dbt run model'],
+)
+
+quay_k8s = KubernetesPodOperator(
+    # k8s namespace created earlier
+    namespace= 'k8-dbt-composer', 
+    # k8s service account name created earlier
+    service_account_name='composer-dbt',
+    # in_cluster=True,
+    # Ensures that the right node-pool is used
+    # node_selector={'http://cloud.google.com/gke-nodepool': 'pool-1'}, 
+    # Ensures that cache is always refreshed
+    image_pull_policy='Always', 
+    # Artifact image of dbt repo
+    # image='europe-west1-docker.pkg.dev/poc-bq2hana/dbt-repo/my-image',
+    image='europe-west1-docker.pkg.dev/poc-bq2hana/dbt-repo/my-image',
+    # links to ENTRYPOINT in .sh file
+    # cmds=['/app/dbt_run.sh'], 
+    cmds = ['/app/dbt_run.sh'],
+    # arguments=["print('This code is running in a Kubernetes Pod')"],
+    # labels={},
+    # matches sequence of arguments in .sh file (mode,dbt_target,dbt_vars,full_refresh)
+    arguments=['run', 'dev','{from_date: "", to_date: ""}','True'],  
+    name="run-dbt-in-pod",
+    task_id="run-dbt-in-pod",
+    get_logs=True,
+    log_events_on_failure=True,
+    dag=docker_dag,    
     )
 
-    dbt_run.dry_run()

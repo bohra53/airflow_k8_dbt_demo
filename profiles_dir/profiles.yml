@@ -1,0 +1,12 @@
+dbt_k8_demo:
+  outputs:
+    default:
+      type: bigquery
+      dataset: dbt_k8_demo
+      fixed_retries: 1
+      location: EU
+      method: oauth
+      priority: interactive
+      project: poc-bq2hana
+      threads: 5
+      timeout_seconds: 300
