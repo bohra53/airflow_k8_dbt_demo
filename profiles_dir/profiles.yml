@@ -1,6 +1,6 @@
 dbt_k8_demo:
   outputs:
-    default:
+    dev:
       type: bigquery
       dataset: dbt_k8_demo
       fixed_retries: 1
